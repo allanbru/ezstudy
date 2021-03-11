@@ -1,0 +1,57 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', 'Site\HomeController@index')->name('home');
+
+Route::prefix('painel')->group(function(){
+    Route::get('/', 'Admin\HomeController@index')->name("admin");
+
+    Route::get('/dashboard', 'Admin\DashboardController@index')->name("dashboard");
+    
+    Route::get('login', 'Admin\Auth\LoginController@index')->name("login");
+    Route::post("login", "Admin\Auth\LoginController@authenticate");
+
+    Route::get('register', 'Admin\Auth\RegisterController@index')->name("register");
+    Route::post("register", "Admin\Auth\RegisterController@register");
+
+    Route::post("logout", "Admin\Auth\LoginController@logout")->name("logout");
+
+    Route::resource('users', 'Admin\UserController');
+
+    Route::resource('pages', 'Admin\PageController');
+
+    Route::resource('modules', 'Admin\ModuleController');
+    Route::get('modules/fav/{module}', 'Admin\ModuleController@toggleFavorite')->name("togglefav");
+    Route::get('modules/practice/{module}', 'Admin\ModuleController@practice')->name("modules.practice");
+    Route::post('/modules/search', 'Admin\ModuleController@searchDB')->name("modulessearch");
+
+    Route::resource('cards', 'Admin\CardController');
+    Route::post('cards/imgstore', 'Admin\CardController@imgstore')->name("cards.imgstore");
+    Route::post('cards/txtstore', 'Admin\CardController@txtstore')->name("cards.txtstore");
+    Route::get('cards/next/{module}', 'Admin\CardController@queueNext')->name("queuenext");
+    Route::post('cards/solve', 'Admin\CardController@updateElo')->name("cardsolve");
+
+    Route::get('profile', 'Admin\ProfileController@index')->name("profile");
+    Route::put('profile/save', 'Admin\ProfileController@save')->name("profile.save");
+
+    Route::get('settings', 'Admin\SettingController@index')->name("settings");
+    Route::put('settings/save', 'Admin\SettingController@save')->name("settings.save");
+
+    Route::get('chess', 'Admin\ChessController@index')->name("chess");
+
+    Route::get('search', 'Admin\ModuleController@search');
+});
+
+Route::fallback("Site\PageController@index");
