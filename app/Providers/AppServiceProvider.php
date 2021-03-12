@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
     {
 
         if (app()->environment('production')) {
-            URL::forceSchema('https');
+            URL::forceScheme('https');
         }
 
         //Menu
