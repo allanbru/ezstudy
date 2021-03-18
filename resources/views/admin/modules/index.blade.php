@@ -30,6 +30,9 @@
         @endforeach
     </div>
     
+    <div class="row">
+        <small>{{ $modules->links("pagination::bootstrap-4") }}</small>
+    </div>
     
-    <small>{{ $modules->links("pagination::bootstrap-4") }}</small>
+    
 @endsection

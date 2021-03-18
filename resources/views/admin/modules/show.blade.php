@@ -35,95 +35,93 @@
 @endsection
 
 @section('content')
-    <div class="row" id="cards">
 
-        @if($is_owner)
-            <div class="col-md-3 my-4" data-toggle="modal" data-target="#create">
-                <div class="flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front bg-success">
-                            <h1><i class="fas fa-plus"></i></h1>
-                        </div>
-                        <div class="flip-card-back bg-success">
-                            <h1>Adicionar novo card</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
+    <div class="card card-primary card-outline card-tabs">
+        <div class="card-header p-0 pt-1">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="pill" href="#tabcards" role="tab">Cards</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="pill" href="#tabtags" role="tab">Tags</a>
+                </li>
+            </ul>
+        </div>
 
-        @foreach($cards as $card)
-            <div id="card-{{$card->id}}" class="col-md-3 my-4">
-                <div class="flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front">
-                            @if($card->type === 2)
-                                <img src="{{$card->bgimg}}" style="width:100%; height:100%" />
-                            @elseif($card->type === 3)
-                                <?php
-                                    $card_text = preg_replace('/(\[\[)(.+?)(\]\])/', "<kbd>[...]</kbd>", strip_tags($card->front)); 
-                                ?>
-                                <h1>{!! $card_text !!}</h1>
-                            @else
-                                <h1>{{$card->front}}</h1>
-                            @endif
-                        </div>
-                        <div class="flip-card-back">
-                            <h1>{{$card->back}}</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    </div>
+        <div class="card-body">
+            <div class="tab-content">
 
-    <div id="exercise" class="modal modal-fade" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Exercício</h3>
-                    <h3><button class="close" data-dismiss="modal">&times;</h3>
-                </div>
+                <div class="tab-pane fade show active" id="tabcards">
+                    <div class="row" id="cards">
 
-                <div class="modal-body">
-                    <center>
-
-                        <div id="card_ex" class="card my-0" style="width:100%; background-color: dodgerblue; color: white">
-
-                            <div class="card-body my-0">
-                                <h3 id="frente" style="width:100%; height:100%">Frente da carta</h3>
-                                <h3 id="verso" style="width:100%; height:100%; display:none">Verso da carta</h3>
+                        @if($is_owner)
+                            <div class="col-md-3 my-4" data-toggle="modal" data-target="#create">
+                                <div class="flip-card">
+                                    <div class="flip-card-inner">
+                                        <div class="flip-card-front bg-success">
+                                            <h1><i class="fas fa-plus"></i></h1>
+                                        </div>
+                                        <div class="flip-card-back bg-success">
+                                            <h1>Adicionar novo card</h1>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            
-                        </div>
-
-                        <div id="tudofeito" class="alert alert-success" style="display: none">
-                            <i class="fas fa-fw fa-check"></i> Todos os cards já foram revisados!
-                        </div>
-
-                    </center>
-                    
+                        @endif
+                
+                        @foreach($cards as $card)
+                            <div id="card-{{$card->id}}" class="col-md-3 my-4">
+                                <div class="flip-card">
+                                    <div class="flip-card-inner">
+                                        <div class="flip-card-front">
+                                            @if($card->type === 2)
+                                                <img src="{{$card->bgimg}}" style="width:100%; height:100%" />
+                                            @elseif($card->type === 3)
+                                                <?php
+                                                    $card_text = preg_replace('/(\[\[)(.+?)(\]\])/', "<kbd>[...]</kbd>", strip_tags($card->front)); 
+                                                ?>
+                                                <h1>{!! $card_text !!}</h1>
+                                            @else
+                                                <h1>{{$card->front}}</h1>
+                                            @endif
+                                        </div>
+                                        <div class="flip-card-back">
+                                            <h1>{{$card->back}}</h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach    
+                    </div>
+                    <small>{{ $cards->links("pagination::bootstrap-4") }}</small>
                 </div>
 
-                <form id="card_form" method="POST" action="{{route('cardsolve')}}">
-                    @csrf
-                    <input id="card_id" type="hidden" name="id" value="" />
-                    <input id="card_result" type="hidden" name="result" value="" />
-                </form>
+                <div class="tab-pane fade" id="tabtags">
+                    <table id="tags" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th style="width:150px">Ações</th>
+                            </tr> 
+                        </thead>
+                        <tbody>
+                            @foreach($tags as $tag)
+                                <tr>
+                                    <td><a href="{{route("tags.show", ['tag' => $tag->id])}}">{{$tag->title}}</a></td>
+                                    <td><a href="{{route("tags.show", ['tag' => $tag->id])}}" class="btn btn-sm btn-secondary" title="Ver"><i class="fas fa-eye"></i></a></td>
+                                </tr>
+                            @endforeach
 
-                <div class="modal-footer">
-                    <div id="virar" class="col-md-12">
-                        <button onclick="virarCarta()" class="btn btn-info btn-block">Virar carta</button>
-                    </div>
-
-                    <div id="avaliar"  class="col-md-12" style="display:none">
-                        <div class="btn-group d-flex" role="group" style="width:100%">
-                            <button name="result" type="button" class="btn btn-success w-100" onclick="avaliar(3)">Fácil</button>
-                            <button name="result" type="button" class="btn btn-warning w-100" onclick="avaliar(2)">Médio</button>
-                            <button name="result" type="button" class="btn btn-danger w-100" onclick="avaliar(1)">Difícil</button>
-                        </div>
-                    </div>
+                            @if($is_owner)
+                                <tr>
+                                    <td><a href="{{route("tags.create", ["module" => $module->id])}}" class="btn btn-primary"><i class="fas fa-plus"></i> Criar Tag</a></td>
+                                    <td></td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
                 </div>
+
             </div>
         </div>
     </div>
@@ -228,8 +226,6 @@
                         
                     </div>
 
-                    </div>
-
                 </div>
             </div>
         </div>
@@ -238,62 +234,7 @@
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script>
-
-        var pvar = 0;
-
-        function virarCarta(){
-            pvar++;
-            if(pvar%2 == 1){
-                $("#frente").fadeOut("slow").promise().done(function(){
-                    $("#verso").fadeIn("fast");
-                    if(pvar === 1) $("#avaliar").fadeIn("slow");
-                });
-                
-                return;
-                
-            } 
-
-            $("#verso").fadeOut("slow").promise().done(function(){
-                $("#frente").fadeIn("fast");
-            });  
-        }
-
-        function pegarCarta(){
-            $.get("{{route('queuenext', ['module' => $module->id])}}", function(result){
-                data = JSON.parse(result);
-                if(data !== 0){
-                    pvar = 0;
-                    $("#card_id").val(data[0]['id']);
-                    $("#verso").html(data[0]['back']).hide();
-                    $("#avaliar").hide();
-                    if(data[0]['bgimg'] != null){
-                        $("#frente").html("<img src=\""+ data[0]['bgimg'] + "\" style=\"width:100%;height:100%\" />").fadeIn("slow");
-                    }else{
-                        $("#frente").html(data[0]['front']).fadeIn("slow");
-                    }
-                    
-                }else{
-                    $("#card_ex").hide();
-                    $("#avaliar").hide();
-                    $("#virar").hide();
-                    $("#tudofeito").fadeIn("slow");
-                }
-            });
-        }
-
-        function avaliar(valor){
-            $("#card_result").val(valor);
-            $.post($("#card_form").attr("action"), $("#card_form").serialize()).done(function(result){
-                pegarCarta();
-                result = JSON.parse(result);
-                if(result && typeof(result) == 'number' && result > 100){
-                    rating = Math.round(result);
-                    $("#rating-container").fadeIn("slow");
-                    $("#rating").html(rating);
-                }
-            });
-        }
-
+  
         function fav(){
             $.get("{{route('togglefav', ['module' => $module->id])}}", function(result){
                 var data = JSON.parse(result);
@@ -304,7 +245,6 @@
             });
         }
 
-        pegarCarta();
     </script>
 
     @if($is_owner)
@@ -313,6 +253,12 @@
             $('#inputImgFundo').on('change',function(){
                 var fileName = $(this).val();
                 $(this).next('.custom-file-label').html(fileName);
+            });
+
+            window.addEventListener('paste', e => {
+                fileInput = document.getElementById("inputImgFundo");
+                fileInput.files = e.clipboardData.files;
+                $(fileInput).next('.custom-file-label').html("Imagem colada com sucesso!");
             });
 
             $("#submit-default").on("click", function(){
@@ -345,6 +291,7 @@
                             alert(data.RESULT);
                         }else{
                             $("#cards").append("<div id=\"card-"+ data.RESULT['id'] + "\" class=\"col-md-3 my-4\"><div class=\"flip-card\"><div class=\"flip-card-inner\"><div class=\"flip-card-front\"><img src=\"" + data.RESULT['bgimg'] + "\" style=\"width:100%; height:100%\" /></div><div class=\"flip-card-back\"><h1>" + data.RESULT['back'] + "</h1></div></div></div></div>");
+                            $("#inputImgFundo").next('.custom-file-label').html("Escolha uma imagem...");
                             $("#form-img").trigger("reset");
                         }
                     },

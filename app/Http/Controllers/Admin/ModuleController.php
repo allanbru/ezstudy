@@ -8,6 +8,7 @@ use App\Models\Cards_history;
 use App\Models\Cards_queue;
 use App\Models\Module;
 use App\Models\Modules_user;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -119,11 +120,14 @@ class ModuleController extends Controller
                     $elo_user = $history->elo_user;
                 }
 
-                $cards = Card::where("module", $id)->orderBy('front', 'ASC')->get();
+                $tags = Tag::where("module", $id)->orderBy('title', 'ASC')->get();
+
+                $cards = Card::where("module", $id)->orderBy('front', 'ASC')->paginate(11);
 
                 return view('admin.modules.show', [
                     'module' => $module,
                     'cards' => $cards,
+                    'tags' => $tags,
                     'is_owner' => $is_owner,
                     'is_fav' => $is_fav,
                     'elo_user' => $elo_user
@@ -179,11 +183,13 @@ class ModuleController extends Controller
     {
         $module = Module::find($id);
         $cards = Card::where("module", $id)->orderBy('front', 'ASC')->get();
+        $tags = Tag::where("module", $id)->orderBy('title', 'ASC')->get();
 
         if($module && $module->author === intval(Auth::id())){
             return view("admin.modules.edit", [
                 'module' => $module,
-                'cards' => $cards
+                'cards' => $cards,
+                'tags' => $tags
             ]);
         }
 

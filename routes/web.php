@@ -43,6 +43,9 @@ Route::prefix('painel')->group(function(){
     Route::get('cards/next/{module}', 'Admin\CardController@queueNext')->name("queuenext");
     Route::post('cards/solve', 'Admin\CardController@updateElo')->name("cardsolve");
 
+    Route::resource('tags', 'Admin\TagController');
+    Route::get("tags/new/{module}", 'Admin\TagController@create')->name("tags.create");
+
     Route::get('profile', 'Admin\ProfileController@index')->name("profile");
     Route::put('profile/save', 'Admin\ProfileController@save')->name("profile.save");
 

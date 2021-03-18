@@ -156,8 +156,6 @@ class PageController extends Controller
             if(!empty($data['slug'])){
                 $page->slug = $data['slug'];
             }
-
-            $page->save();
             
             if(count($validator->errors()) > 0){
                 return redirect()->route("pages.edit", ["page" => $id])

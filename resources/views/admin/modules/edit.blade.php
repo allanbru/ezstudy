@@ -57,34 +57,88 @@
 
     </div>   
 
-    <h4>Cards nesse módulo</h4>
+    <div id="module-cards" class="card card-primary collapsed-card">
+        
+        <div class="card-header">
+            <h3 class="card-title">Cards nesse módulo</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <table id="cards" class="table table-hover">
+                <thead>
+                <tr>
+                        <th>Frente</th>
+                        <th>Verso</th>
+                        <th>Dificuldade</th>
+                        <th style="width:150px">Ações</th>
+                    </tr> 
+                </thead>
+                <tbody>
+                    @foreach($cards as $card)
+                        <tr id="card-{{$card->id}}">
+                            <td>{{$card->front}}</td>
+                            <td>{{$card->back}}</td>
+                            <td>{{$card->elo}}</td>
+                            <td>
+                                <form id="form-delete-{{$card->id}}" class="d-inline" method="post" action="{{route('cards.destroy', ['card' => $card->id])}}" onSubmit="return confirm('Tem certeza?')">
+                                    @method("DELETE")
+                                    @csrf
+                                    <button type="button" data-id="{{$card->id}}" class="btn btn-sm btn-danger deleteCard" onclick="deleteCard({{$card->id}})"><i class="fas fa-trash"></i></a>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        
     
-    <table id="cards" class="table table-hover">
-        <thead>
-           <tr>
-                <th>Frente</th>
-                <th>Verso</th>
-                <th>Dificuldade</th>
-                <th style="width:150px">Ações</th>
-            </tr> 
-        </thead>
-        <tbody>
-            @foreach($cards as $card)
-                <tr id="card-{{$card->id}}">
-                    <td>{{$card->front}}</td>
-                    <td>{{$card->back}}</td>
-                    <td>{{$card->elo}}</td>
-                    <td>
-                        <form id="form-delete-{{$card->id}}" class="d-inline" method="post" action="{{route('cards.destroy', ['card' => $card->id])}}" onSubmit="return confirm('Tem certeza?')">
-                            @method("DELETE")
-                            @csrf
-                            <button type="button" data-id="{{$card->id}}" class="btn btn-sm btn-danger deleteCard" onclick="deleteCard({{$card->id}})"><i class="fas fa-trash"></i></a>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+    </div>
+
+    <div id="module-tags" class="card card-primary collapsed-card">
+        <div class="card-header">
+            <h3 class="card-title">Tags nesse módulo</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <table id="cards" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th style="width:150px">Ações</th>
+                    </tr> 
+                </thead>
+                <tbody>
+                    @foreach($tags as $tag)
+                        <tr id="tag-{{$tag->id}}">
+                            <td><a href="{{route("tags.show", ['tag' => $tag->id])}}">{{$tag->title}}</a></td>
+                            <td>
+                                <a href="{{route("tags.show", ['tag' => $tag->id])}}" class="btn btn-sm btn-secondary" title="Ver"><i class="fas fa-eye"></i></a>
+                                <a href="{{route("tags.edit", ['tag' => $tag->id])}}" class="btn btn-sm btn-warning" title="Editar"><i class="fas fa-pen"></i></a>
+                                <form id="form-delete-tag-{{$tag->id}}" class="d-inline" method="post" action="{{route('tags.destroy', ['tag' => $tag->id])}}" onSubmit="return confirm('Tem certeza?')">
+                                    @method("DELETE")
+                                    @csrf
+                                    <button type="button" data-id="{{$tag->id}}" class="btn btn-sm btn-danger" onclick="deleteTag({{$tag->id}})" title="Deletar"><i class="fas fa-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    
 
 @endsection
 
@@ -106,6 +160,17 @@
                     data = JSON.parse(result);
                     if(data === 1){
                         $("#card-" + id).remove();
+                    }
+                });
+            }
+        }
+
+        function deleteTag(id){
+            if(confirm("Tem certeza?")){
+                $.post($("#form-delete-tag-" + id).attr("action"), $("#form-delete-tag-" + id).serialize(), function(result){
+                    data = JSON.parse(result);
+                    if(data === 1){
+                        $("#tag-" + id).remove();
                     }
                 });
             }
