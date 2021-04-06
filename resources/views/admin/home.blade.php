@@ -9,6 +9,15 @@
 @endsection
 
 @section('content')
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="{{asset("assets/js/jquery.CalendarHeatmap.min.js")}}"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
     <div class="row">
         <div class="col-lg-4 col-6">
@@ -64,14 +73,25 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Progresso diário</h3>
+                    <h3 class="card-title">Histórico de Cards</h3>
                 </div>
                 <div class="card-body">
-                    <canvas id="dailyGraph"></canvas>
+                    <div id="heatmap"></div>
+                    
                 </div>
             </div>
         </div>
         <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Progresso diário</h3>
+                </div>
+                <div class="card-body">
+                    <canvas id="dailyGraph"></canvas>           
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6" style="display:none">
             <div class="card bg-secondary">
                 <div class="card-header">
                     <h3 class="card-title">Últimas notícias</h3>
@@ -110,6 +130,53 @@
                 }
             });
         }
+
+        var events = {!! $cardsSolved !!};
+        var data = [];
+        for (var i = 0; i < events.length; i++ ) {
+            
+            var d = events[i]["y"]
+            + "-"
+            + events[i]["m"].toLocaleString('en-US', {
+                minimumIntegerDigits: 2,
+                useGrouping: false
+            }) 
+            + "-" 
+            + events[i]["d"].toLocaleString('en-US', {
+                minimumIntegerDigits: 2,
+                useGrouping: false
+            }); 
+			data.push({
+				count: parseInt( events[i]["c"] ),
+				date: d
+			});
+		}
+        $("#heatmap").CalendarHeatmap(data, {
+			title: null,
+            months: 6,
+            labels: {
+                days: true,
+                custom: {
+                    weekDayLabels: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
+                    monthLabels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+                }
+            },
+            legend: {
+                show: false
+            },
+            tooltips: {
+                show: true,
+                options: {
+
+                }
+            }
+		});
+
     </script>
 
 @endsection
+
+@section("css")
+    <link rel="stylesheet" type="text/css" href="{{asset("assets/css/jquery.CalendarHeatmap.min.css")}}">
+@endsection
+

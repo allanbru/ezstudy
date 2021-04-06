@@ -30,17 +30,35 @@ class HomeController extends Controller
             ['show_timestamp', '<=', date("Y-m-d H:i:s", time())]
         ])->count();
 
-        $cardsByDay = Cards_history::selectRaw("day(created_at) as d, month(created_at) as m, count(*) as c")
+        $cardsByDay = Cards_history::selectRaw("day(created_at) as d, month(created_at) as m, year(created_at) as y, count(*) as c")
+        ->where([
+            ['user', '=', $loggedId],
+            ['created_at', '>=', date("Y-m-d H:i:s", strtotime('-180 days'))]
+        ])
+        ->groupBy("m")
+        ->groupBy("d")
+        ->groupBy("y")
+        ->get();
+
+        $weekCardsByDay = Cards_history::selectRaw("day(created_at) as d, month(created_at) as m, year(created_at) as y, count(*) as c")
         ->where([
             ['user', '=', $loggedId],
             ['created_at', '>=', date("Y-m-d H:i:s", strtotime('-7 days'))]
         ])
         ->groupBy("m")
         ->groupBy("d")
+        ->groupBy("y")
         ->get();
 
         $graph = [];
-        foreach($cardsByDay as $cardDay){
+        $startDate = strtotime("-7 days");
+        $endDate = strtotime("today");
+        while($startDate <= $endDate){
+            $graph[date("d/m", $startDate)] = 0;
+            $startDate+=86400;
+        }
+
+        foreach($weekCardsByDay as $cardDay){
             $graph[$cardDay['d'] . "/" . $cardDay['m']] = intval($cardDay['c']);
         }
 
@@ -52,7 +70,8 @@ class HomeController extends Controller
             'solved_count' => $solved_count,
             'review_count' => $review_count,
             'graphLabels' => $graphLabels,
-            'graphValues' => $graphValues
+            'graphValues' => $graphValues,
+            'cardsSolved' => json_encode($cardsByDay)
         ]);
     }
         
