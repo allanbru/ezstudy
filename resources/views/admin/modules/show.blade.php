@@ -80,13 +80,13 @@
                                                 <?php
                                                     $card_text = preg_replace('/(\[\[)(.+?)(\]\])/', "<kbd>[...]</kbd>", strip_tags($card->front)); 
                                                 ?>
-                                                <h1>{!! $card_text !!}</h1>
+                                                <h3>{!! $card_text !!}</h3>
                                             @else
-                                                <h1>{{$card->front}}</h1>
+                                                <h3>{{$card->front}}</h3>
                                             @endif
                                         </div>
                                         <div class="flip-card-back">
-                                            <h1>{{$card->back}}</h1>
+                                            <h3>{{$card->back}}</h3>
                                         </div>
                                     </div>
                                 </div>
@@ -323,8 +323,8 @@
         /* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
         .flip-card {
         background-color: transparent;
-        width: 300px;
-        height: 200px;
+        width: 225px;
+        height: 150px;
         border: 1px solid #f1f1f1;
         perspective: 1000px; /* Remove this if you don't want the 3D effect */
         }

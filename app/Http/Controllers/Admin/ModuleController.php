@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Card;
 use App\Models\Cards_history;
 use App\Models\Cards_queue;
+use App\Models\Group_module;
+use App\Models\Group_user;
 use App\Models\Module;
 use App\Models\Modules_user;
 use App\Models\Tag;
@@ -102,7 +104,7 @@ class ModuleController extends Controller
         if($module){
             $loggedId = intval(Auth::id());
             $is_owner = $module->author === $loggedId;
-            if($module->public || $is_owner){
+            if($this->canAccessModule($loggedId, $id)){
                 $is_fav = Modules_user::where([
                     ['user', '=', $loggedId],
                     ['module', '=', $id]
@@ -144,8 +146,8 @@ class ModuleController extends Controller
         $module = Module::find($id);
         if($module){
             $loggedId = intval(Auth::id());
-            $is_owner = $module->author === $loggedId;
-            if($module->public || $is_owner){
+
+            if($this->canAccessModule($loggedId, $id)){
 
                 $elo_user = false;
 
@@ -232,7 +234,6 @@ class ModuleController extends Controller
             $module->icon = $data['icon'];
             $module->public = (isset($data["public"]) && $data["public"] !== null);
 
-            $module->save();
             
             if(count($validator->errors()) > 0){
                 return redirect()->route("modules.edit", ["module" => $id])
@@ -264,7 +265,16 @@ class ModuleController extends Controller
     }
 
     public function search(){
-        return view('admin.modules.search');
+        return view('admin.modules.search', [
+            'default' => ""
+        ]);
+    }
+
+    public function search2(Request $request){
+        $data = $request->only(['menu-search-input']);
+        return view('admin.modules.search', [
+            'default' => $data['menu-search-input']
+        ]);
     }
 
     public function searchDB(Request $request){
@@ -323,5 +333,23 @@ class ModuleController extends Controller
             echo json_encode(0);
             exit;
         }
+    }
+
+    protected function canAccessModule($user, $module_id){
+        $module = Module::find($module_id);
+        if($module){
+            if($module->public || $module->author === intval($user)) return true;
+            
+            $uGroups = [];
+            $groups = Group_user::where("user", $user)->get();
+            foreach($groups as $g){
+                $uGroups[] = $g->grupo;
+            }
+
+            $count = Group_module::where('module', $module_id)->whereIn('grupo', $uGroups)->count();
+            if($count > 0) return true;
+        }
+        return false;
+        
     }
 }

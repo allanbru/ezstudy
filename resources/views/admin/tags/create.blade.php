@@ -35,9 +35,7 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Texto</label>
                     <div class="col-sm-10">
-                        <textarea name="text" class="form-control body-field">
-                            {{old("text")}}
-                        </textarea>
+                        <textarea name="text" class="form-control body-field">{{old("text")}}</textarea>
                     </div>
                 </div>
 

@@ -9,7 +9,7 @@
 @section("content")
     <form id="searchform" method="post">
         @csrf
-        <input id="search" type="text" name="title" class="form-control" placeholder="Digite o título para pesquisar..." /> 
+        <input id="search" type="text" name="title" class="form-control" placeholder="Digite o título para pesquisar..." value="{{$default}}" /> 
     </form>
 
     <br />
@@ -33,7 +33,10 @@
             };
         }
 
-        $("#search").on("keyup", function(){
+        $("#search").on("keypress", function(event){
+            if (event.which == '13') {
+                event.preventDefault();
+            }
             $(".modules-widgets").html("Pesquisando...");
         });
 
@@ -52,5 +55,21 @@
                 }
             });
         }, 1000));
+
+        if($("#search").val() != ""){
+            $.post("{{route('modulessearch')}}", $("#searchform").serialize(), function(result){
+                data = JSON.parse(result);
+                if(data.result && data.result.length > 0){
+                    $(".modules-widgets").html("");
+                    data.result.forEach(function(obj){
+                        $(".modules-widgets").append("<div class=\"col-lg-4 col-6\"><div class=\"small-box bg-info\"><div class=\"inner\"><h3>"+ obj.title +"</h3><p>&nbsp;</p></div><div class=\"icon\"><i class=\"" + obj.icon + "\"></i></div><a href=\"" + obj.link + "\" class=\"small-box-footer\">Acessar <i class=\"fas fa-arrow-circle-right\"></i></a></div></div>");
+                    });
+                }else if(data.error === 9){
+                    $(".modules-widgets").html("");
+                }else{
+                    $(".modules-widgets").html("Não foram encontrados resultados para a sua pesquisa.");
+                }
+            });
+        }
     </script>
 @endsection

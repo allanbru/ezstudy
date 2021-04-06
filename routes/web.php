@@ -46,6 +46,14 @@ Route::prefix('painel')->group(function(){
     Route::resource('tags', 'Admin\TagController');
     Route::get("tags/new/{module}", 'Admin\TagController@create')->name("tags.create");
 
+    Route::resource('groups', 'Admin\GroupController');
+    Route::get('groups/clink/{group}', 'Admin\GroupController@genlink')->name("groups.genlink");
+    Route::get('groups/join/{link}', 'Admin\GroupController@join')->name("groups.join");
+    Route::post('groups/join/{group}', 'Admin\GroupController@joinMember')->name("groups.joinMember");
+    Route::delete('groups/remove/{user}/{group}', 'Admin\GroupController@removeMember')->name("groups.removeMember");
+    Route::get('groups/{group}/module/{module}', 'Admin\GroupController@addModule')->name("groups.addModule");
+    Route::post('groups/msg/{group}', 'Admin\GroupController@writeMsg')->name("groups.writeMsg");
+
     Route::get('profile', 'Admin\ProfileController@index')->name("profile");
     Route::put('profile/save', 'Admin\ProfileController@save')->name("profile.save");
 
@@ -55,6 +63,7 @@ Route::prefix('painel')->group(function(){
     Route::get('chess', 'Admin\ChessController@index')->name("chess");
 
     Route::get('search', 'Admin\ModuleController@search');
+    Route::post('search', 'Admin\ModuleController@search2');
 });
 
 Route::fallback("Site\PageController@index");

@@ -83,7 +83,7 @@ return [
     |
     */
 
-    'layout_topnav' => null,
+    'layout_topnav' => true,
     'layout_boxed' => null,
     'layout_fixed_sidebar' => null,
     'layout_fixed_navbar' => null,
@@ -226,51 +226,67 @@ return [
     'menu' => [
         [
             'text' => 'Início',
-            'url'  => 'painel',
-            'icon' => 'fas fa-fw fa-home'
+            'route'  => 'admin',
+            'icon' => 'fas fa-fw fa-home',
+            'topnav_right' => true ,
         ],
         [
-            'text' => 'Buscar Módulos',
-            'url'  => 'painel/search',
-            'icon' => 'fas fa-fw fa-search'
+            'text'  => 'Módulos',
+            'route'   => 'modules.index',
+            'icon'  => 'fas fa-fw fa-th-large',
+            'topnav_right' => true ,
         ],
         [
-            'text'  => 'Meus Módulos',
-            'url'   => 'painel/modules',
-            'icon'  => 'fas fa-fw fa-th-large'
-        ],
-        [
-            'header'    => 'Administrativo do site',
-            'can'       => 'use-dashboard'],
-        [
-            'text'        => 'Dashboard',
-            'url'         => 'painel/dashboard',
-            'icon'        => 'fas fa-fw fa-tachometer-alt',
-            'can'         => 'use-dashboard'
-        ],
-        [
-            'text'  => 'Páginas',
-            'url'   => 'painel/pages',
-            'icon'  => 'fas fa-fw fa-file',
-            'can'   => 'edit-pages'
-        ],
-        [
-            'text' => 'Usuários',
-            'url'  => 'painel/users',
+            'text' => 'Grupos',
+            'route' => 'groups.index',
             'icon' => 'fas fa-fw fa-users',
-            'can'  => 'edit-users'
+            'topnav_right' => true
+        ],
+        [
+            'text'    => 'Admin',
+            'icon'    => 'fas fa-fw fa-tools',
+            'can'       => 'use-dashboard',
+            'topnav_user' => true,
+            'submenu' => [
+                [
+                    'text'        => 'Dashboard',
+                    'url'         => 'painel/dashboard',
+                    'icon'        => 'fas fa-fw fa-tachometer-alt',
+                    'can'         => 'use-dashboard'
+                ],
+                [
+                    'text'  => 'Páginas',
+                    'url'   => 'painel/pages',
+                    'icon'  => 'fas fa-fw fa-file',
+                    'can'   => 'edit-pages'
+                ],
+                [
+                    'text' => 'Usuários',
+                    'url'  => 'painel/users',
+                    'icon' => 'fas fa-fw fa-users',
+                    'can'  => 'edit-users'
+                ],
+                [
+                    'text' => 'Configurações',
+                    'url' => 'painel/settings',
+                    'icon' => 'fas fa-fw fa-cog',
+                    'can' => 'edit-settings'
+                ],
+            ]
         ],
         ['header' => 'Configurações'],
         [
-            'text' => 'Configurações do site',
-            'url' => 'painel/settings',
-            'icon' => 'fas fa-fw fa-cog',
-            'can' => 'edit-settings'
-        ],
-        [
-            'text' => 'Meu Perfil',
+            'text' => 'Editar Perfil',
             'url' => 'painel/profile',
             'icon' => 'fas fa-fw fa-user',
+            'topnav_user' => true
+        ],
+        [
+            'search' => true,
+            'url' => 'painel/search',                     
+            'method' => 'POST',                  
+            'input_name' => 'menu-search-input', 
+            'text' => 'Buscar Módulos...',         
         ],
     ],
 

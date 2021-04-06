@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Card;
 use App\Models\Cards_history;
 use App\Models\Cards_queue;
+use App\Models\Group_module;
+use App\Models\Group_user;
 use App\Models\Module;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -298,7 +300,7 @@ class CardController extends Controller
         $module = Module::find($id);
         if($module){
             $loggedId = intval(Auth::id());
-            if($module->public || $loggedId === $module->author){
+            if($this->canAccessModule($loggedId, $id)){
 
                 $next = Cards_queue::where([
                     ['user', '=', $loggedId],
@@ -369,5 +371,23 @@ class CardController extends Controller
         }
 
         echo json_encode(0); exit;
+    }
+
+    protected function canAccessModule($user, $module_id){
+        $module = Module::find($module_id);
+        if($module){
+            if($module->public || $module->author === intval($user)) return true;
+            
+            $uGroups = [];
+            $groups = Group_user::where("user", $user)->get();
+            foreach($groups as $g){
+                $uGroups[] = $g->grupo;
+            }
+
+            $count = Group_module::where('module', $module_id)->whereIn('grupo', $uGroups)->count();
+            if($count > 0) return true;
+        }
+        return false;
+        
     }
 }
