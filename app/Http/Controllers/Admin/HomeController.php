@@ -54,7 +54,7 @@ class HomeController extends Controller
         $startDate = strtotime("-7 days");
         $endDate = strtotime("today");
         while($startDate <= $endDate){
-            $graph[date("d/m", $startDate)] = 0;
+            $graph[date("j/n", $startDate)] = 0;
             $startDate+=86400;
         }
 
