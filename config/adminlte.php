@@ -129,7 +129,7 @@ return [
     'classes_sidebar' => 'sidebar-dark-primary elevation-4',
     'classes_sidebar_nav' => '',
     'classes_topnav' => 'navbar-white navbar-light',
-    'classes_topnav_nav' => 'navbar-expand',
+    'classes_topnav_nav' => 'navbar-expand-md',
     'classes_topnav_container' => 'container',
 
     /*
@@ -144,7 +144,7 @@ return [
     |
     */
 
-    'sidebar_mini' => true,
+    'sidebar_mini' => false,
     'sidebar_collapse' => false,
     'sidebar_collapse_auto_size' => false,
     'sidebar_collapse_remember' => false,
@@ -228,19 +228,16 @@ return [
             'text' => 'Início',
             'route'  => 'admin',
             'icon' => 'fas fa-fw fa-home',
-            'topnav_right' => true ,
         ],
         [
             'text'  => 'Módulos',
             'route'   => 'modules.index',
             'icon'  => 'fas fa-fw fa-th-large',
-            'topnav_right' => true ,
         ],
         [
             'text' => 'Grupos',
             'route' => 'groups.index',
             'icon' => 'fas fa-fw fa-users',
-            'topnav_right' => true
         ],
         [
             'text'    => 'Admin',
@@ -286,6 +283,7 @@ return [
             'url' => 'painel/search',                     
             'method' => 'POST',                  
             'input_name' => 'menu-search-input', 
+            'classes' => 'form-control-navbar',
             'text' => 'Buscar Módulos...',         
         ],
     ],
