@@ -1,7 +1,5 @@
 @extends('adminlte::auth.auth-page', ['auth_type' => 'register'])
 
-@section("title", "Cadastro")
-
 @php( $login_url = View::getSection('login_url') ?? config('adminlte.login_url', 'login') )
 @php( $register_url = View::getSection('register_url') ?? config('adminlte.register_url', 'register') )
 
@@ -90,10 +88,6 @@
             <span class="fas fa-user-plus"></span>
             {{ __('adminlte::adminlte.register') }}
         </button>
-
-        <a href="{{$front_config['termsofuse']}}">{{ __('adminlte::login.termsofuse')}}</a> <br />
-        <a href="{{$front_config['privacypolicy']}}">{{ __('adminlte::login.privacypolicy')}}</a> <br />
-        <small>{{ __('adminlte::login.declaration')}}</small>
 
     </form>
 @stop

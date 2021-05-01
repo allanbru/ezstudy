@@ -191,8 +191,8 @@ return [
     'logout_url' => 'painel/logout',
     'login_url' => 'painel/login',
     'register_url' => 'painel/register',
-    'password_reset_url' => 'password/reset',
-    'password_email_url' => 'password/email',
+    'password_reset_url' => 'painel/password/reset',
+    'password_email_url' => 'painel/password/email',
     'profile_url' => false,
 
     /*

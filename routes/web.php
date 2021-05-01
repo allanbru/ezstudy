@@ -26,6 +26,11 @@ Route::prefix('painel')->group(function(){
     Route::get('register', 'Admin\Auth\RegisterController@index')->name("register");
     Route::post("register", "Admin\Auth\RegisterController@register");
 
+    Route::get('password/reset', 'Admin\Auth\ResetPasswordController@request')->name("password.request");
+    Route::post('password/email', "Admin\Auth\ResetPasswordController@email")->name("password.email");
+    Route::get('password/reset-password/{token}', "Admin\Auth\ResetPasswordController@reset")->name("password.reset");
+    Route::post('password/reset/', "Admin\Auth\ResetPasswordController@update")->name("password.update");
+
     Route::post("logout", "Admin\Auth\LoginController@logout")->name("logout");
 
     Route::resource('users', 'Admin\UserController');
