@@ -31,6 +31,11 @@ Route::prefix('painel')->group(function(){
     Route::get('password/reset-password/{token}', "Admin\Auth\ResetPasswordController@reset")->name("password.reset");
     Route::post('password/reset/', "Admin\Auth\ResetPasswordController@update")->name("password.update");
 
+    Route::get('email/verify', 'Admin\Auth\VerificationController@notice')->middleware('auth')->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', 'Admin\Auth\VerificationController@verify')->middleware(['auth', 'signed'])->name('verification.verify');
+    Route::post('/email/verification-notification', 'Admin\Auth\VerificationController@resend')->middleware(['auth', 'throttle:6,1'])->name('verification.resend');
+
+
     Route::post("logout", "Admin\Auth\LoginController@logout")->name("logout");
 
     Route::resource('users', 'Admin\UserController');
@@ -70,5 +75,9 @@ Route::prefix('painel')->group(function(){
     Route::get('search', 'Admin\ModuleController@search');
     Route::post('search', 'Admin\ModuleController@search2');
 });
+
+Route::get('auth/facebook', 'Admin\FacebookController@redirectToFacebook')->name("facebook.auth");
+
+Route::get('auth/facebook/callback', 'Admin\FacebookController@facebookSignin')->name("facebook.callback");
 
 Route::fallback("Site\PageController@index");

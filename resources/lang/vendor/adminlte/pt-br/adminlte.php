@@ -19,4 +19,10 @@ return [
     'password_reset_message'      => 'Recuperar senha',
     'reset_password'              => 'Recuperar senha',
     'send_password_reset_link'    => 'Enviar link de recuperação de senha',
+    'verify_message'              => 'Verifique sua conta',
+    'verify_email_sent'           => 'Um novo link de confirmação foi enviado ao seu e-mail.',
+    'verify_check_your_email'     => 'Antes de continuar, confirme sua conta. Enviamos um link de verificação ao seu e-mail.',
+    'verify_if_not_recieved'      => 'Caso você não tenha recebido este e-mail',
+    'verify_request_another'      => 'clique aqui para enviarmos outro',
+    'confirm_password_message'    => 'Por favor, confirme sua senha para continuar.',
 ];
