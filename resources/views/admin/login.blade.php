@@ -74,13 +74,6 @@
             </div>
         </div>
 
-        {{-- Login with Facebook Component --}}
-        <div class="flex items-center justify-end mt-4">
-            <a class="btn" href="{{ route('facebook.auth') }}"
-                style="background-color: #3B5499; color: #ffffff; padding: 8px; width: 100%; text-align: center; display: block; border-radius:4px;">
-                Login with Facebook
-            </a>
-        </div>  
     </form>
 @stop
 

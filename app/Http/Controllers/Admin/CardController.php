@@ -313,9 +313,9 @@ class CardController extends Controller
                     $dt = new \DateTime();
                     $show_timestamp = $dt->createFromFormat("Y-m-d H:i:s", $next->show_timestamp)->format("U");
                     if($show_timestamp <= time()){
-                        $card = Card::find($next->card);
+                        $card = Card::find($next);
                         if($card){
-                            echo json_encode(array($card)); exit;
+                            echo json_encode($card); exit;
                         }else{
                             $next->delete();
                             return $this->queueNext($id);
