@@ -30,6 +30,21 @@ class FacebookController extends Controller
                 Auth::login($facebookId);
                 return redirect('/painel');
             }else{
+
+                $data = [
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'password' => time()
+                ];
+
+                $validator = $this->validator($data);
+
+                if($validator->fails()){
+                    return redirect()->route('register')
+                    ->withErrors($validator)
+                    ->withInput();
+                }
+                
                 $createUser = User::create([
                     'name' => $user->name,
                     'email' => $user->email,
@@ -44,5 +59,14 @@ class FacebookController extends Controller
         } catch (Exception $exception) {
             dd($exception->getMessage());
         }
+    }
+
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'name' => ['required', 'string', 'max:100'],
+            'email' => ['required', 'string', 'email', 'max:100', 'unique:users'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
+        ]);
     }
 }
