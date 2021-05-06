@@ -71,4 +71,7 @@ Route::prefix('painel')->group(function(){
     Route::post('search', 'Admin\ModuleController@search2');
 });
 
+Route::get('oauth/facebook', 'Admin\FacebookController@redirectToFacebook')->name('facebook.login');
+Route::get('oauth/facebook/callback', 'Admin\FacebookController@facebookSignIn')->name('facebook.callback');
+
 Route::fallback("Site\PageController@index");

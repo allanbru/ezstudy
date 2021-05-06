@@ -71,7 +71,12 @@
                     <span class="fas fa-sign-in-alt"></span>
                     {{ __('adminlte::adminlte.sign_in') }}
                 </button>
+                <br />
+                
             </div>
+            <a href="{{ route('facebook.login') }}" class="btn btn-primary btn-block">
+                <i class="fab fa-facebook"></i> Login with Facebook
+            </a>
         </div>
 
     </form>
