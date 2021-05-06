@@ -40,7 +40,7 @@ class FacebookController extends Controller
                 $validator = $this->validator($data);
 
                 if($validator->fails()){
-                    return redirect()->route('register')
+                    return redirect()->route('login')
                     ->withErrors($validator)
                     ->withInput();
                 }
