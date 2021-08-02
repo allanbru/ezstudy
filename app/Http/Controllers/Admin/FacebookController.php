@@ -31,7 +31,7 @@ class FacebookController extends Controller
                 return redirect('/painel');
             }else{
 
-                $pw = " " + time();
+                $pw = time();
 
                 $data = [
                     'name' => $user->name,
