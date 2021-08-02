@@ -73,5 +73,8 @@ Route::prefix('painel')->group(function(){
 
 Route::get('oauth/facebook', 'Admin\FacebookController@redirectToFacebook')->name('facebook.login');
 Route::get('oauth/facebook/callback', 'Admin\FacebookController@facebookSignIn')->name('facebook.callback');
+Route::post('oauth/facebook/datadelete', 'Admin\FacebookController@dataDeletionCallback')->name('facebook.dataDeletion');
+Route::get('oauth/facebook/datadelete/{code}', 'Admin\FacebookController@dataDeletionStatus')->name('facebook.dataDeletionStatus');
+
 
 Route::fallback("Site\PageController@index");

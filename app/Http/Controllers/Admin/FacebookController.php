@@ -63,6 +63,57 @@ class FacebookController extends Controller
         }
     }
 
+    public function dataDeletionCallback(Request $request)
+    {
+        $req = $request->get('signed_request');
+        $data = $this->parse_signed_request($req);
+        $facebook_id = $data['user_id'];
+
+        $u = User::where([
+            ['facebook_id' => $facebook_id]
+        ])->forceDelete();
+
+        // here will check if the user is deleted
+        $isDeleted = User::withTrashed()->where([
+            ['provider' => 'facebook'],
+            ['provider_id' => $user_id]
+        ])->find();
+
+        if ($isDeleted === null) {
+            return response()->json([
+                'url' => route('facebook.dataDeletionStatus', ['code' => $user_id]), 
+                'code' => $user_id
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'operation not successful'
+        ], 500);
+    }
+
+    public function dataDeletionStatus($code)
+    {
+
+        $user_id = base64_decode($code);
+        
+        $u = User::where([
+            ['facebook_id' => $user_id]
+        ]);
+        
+        $isDeleted = User::withTrashed()->where([
+            ['provider' => 'facebook'],
+            ['provider_id' => $user_id]
+        ])->find();
+
+        if ($isDeleted === null) {
+            echo "Usuário deletado com sucesso.";
+            exit;
+        }
+        echo "Usuário ainda não deletado. Confirmação pendente.";
+        exit;
+
+    }
+
     protected function validator(array $data)
     {
         return Validator::make($data, [
@@ -70,5 +121,28 @@ class FacebookController extends Controller
             'email' => ['required', 'string', 'email', 'max:100', 'unique:users'],
             'password' => ['required'],
         ]);
+    }
+
+    protected function parse_signed_request($signed_request) {
+        list($encoded_sig, $payload) = explode('.', $signed_request, 2);
+
+        $secret = config('service.facebook.client_secret'); // Use your app secret here
+
+        // decode the data
+        $sig = $this->base64_url_decode($encoded_sig);
+        $data = json_decode($this->base64_url_decode($payload), true);
+
+        // confirm the signature
+        $expected_sig = hash_hmac('sha256', $payload, $secret, $raw = true);
+        if ($sig !== $expected_sig) {
+            error_log('Bad Signed JSON signature!');
+            return null;
+        }
+
+        return $data;
+    }
+
+    protected function base64_url_decode($input) {
+        return base64_decode(strtr($input, '-_', '+/'));
     }
 }
