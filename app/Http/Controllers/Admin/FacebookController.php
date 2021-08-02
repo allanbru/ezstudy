@@ -67,21 +67,16 @@ class FacebookController extends Controller
     {
         $req = $request->get('signed_request');
         $data = $this->parse_signed_request($req);
-        $facebook_id = $data['user_id'];
+        $user_id = $data['user_id'];
 
-        $u = User::where([
-            ['facebook_id' => $facebook_id]
-        ])->forceDelete();
+        $u = User::where('facebook_id', $user_id)->forceDelete();
 
         // here will check if the user is deleted
-        $isDeleted = User::withTrashed()->where([
-            ['provider' => 'facebook'],
-            ['provider_id' => $user_id]
-        ])->find();
+        $isDeleted = User::where('facebook_id', $user_id)->get();
         
         $code = base64_encode($facebook_id);
 
-        if ($isDeleted === null) {
+        if (!count($isDeleted)) {
             echo json_encode([
                 'url' => route('facebook.dataDeletionStatus', ['code' => $code]), 
                 'confirmation_code' => $code
@@ -99,17 +94,10 @@ class FacebookController extends Controller
 
         $user_id = base64_decode($code);
         
-        $u = User::where([
-            ['facebook_id' => $user_id]
-        ]);
+        $u = User::where('facebook_id', $user_id)->get();
         
-        $isDeleted = User::withTrashed()->where([
-            ['provider' => 'facebook'],
-            ['provider_id' => $user_id]
-        ])->find();
-
-        if ($isDeleted === null) {
-            echo "Usuário deletado com sucesso.";
+        if (!count($u)) {
+            echo "Usuário não consta no sistema.";
             exit;
         }
         echo "Usuário ainda não deletado. Confirmação pendente.";
