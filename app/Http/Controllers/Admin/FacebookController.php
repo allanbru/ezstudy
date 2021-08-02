@@ -31,10 +31,12 @@ class FacebookController extends Controller
                 return redirect('/painel');
             }else{
 
+                $pw = " " + time();
+
                 $data = [
                     'name' => $user->name,
                     'email' => $user->email,
-                    'password' => time()
+                    'password' => $pw
                 ];
 
                 $validator = $this->validator($data);
@@ -49,7 +51,7 @@ class FacebookController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                     'facebook_id' => $user->id,
-                    'password' => Hash::make(time())
+                    'password' => Hash::make($pw)
                 ]);
     
                 Auth::login($createUser);
@@ -66,7 +68,7 @@ class FacebookController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:100'],
             'email' => ['required', 'string', 'email', 'max:100', 'unique:users'],
-            'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'password' => ['required', 'string', 'min:6'],
         ]);
     }
 }
