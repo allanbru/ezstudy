@@ -78,12 +78,15 @@ class FacebookController extends Controller
             ['provider' => 'facebook'],
             ['provider_id' => $user_id]
         ])->find();
+        
+        $code = base64_encode($facebook_id)
 
         if ($isDeleted === null) {
-            return response()->json([
-                'url' => route('facebook.dataDeletionStatus', ['code' => $user_id]), 
-                'code' => $user_id
+            echo json_encode([
+                'url' => route('facebook.dataDeletionStatus', ['code' => $code]), 
+                'confirmation_code' => $code
             ]);
+            exit;
         }
 
         return response()->json([
