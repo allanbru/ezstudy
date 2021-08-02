@@ -79,7 +79,7 @@ class FacebookController extends Controller
             ['provider_id' => $user_id]
         ])->find();
         
-        $code = base64_encode($facebook_id)
+        $code = base64_encode($facebook_id);
 
         if ($isDeleted === null) {
             echo json_encode([
